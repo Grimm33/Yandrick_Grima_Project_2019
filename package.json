@@ -1,0 +1,22 @@
+{
+  "name": "yandrick_grima_project_2019",
+  "version": "1.0.0",
+  "description": "Book Store",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Grimm33/Yandrick_Grima_Project_2019.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Grimm33/Yandrick_Grima_Project_2019/issues"
+  },
+  "homepage": "https://github.com/Grimm33/Yandrick_Grima_Project_2019#readme",
+  "devDependencies": {
+    "sass": "^1.19.0"
+  }
+}
