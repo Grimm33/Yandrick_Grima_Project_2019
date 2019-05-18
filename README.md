@@ -5,13 +5,13 @@
 
 This is a website which lets uers shop for books
 
-###Functionality: 
+### Functionality: 
 * let users register/ login/ logout
 * search books using google books api
 * add books to cart and view all books in cart
 * checkout items from cart and 'buy' them
 
-###To be added:
+### To be added:
 * let users see their bought books and total amount of money spend
 * let users see their information in the profile page
 * let users change their profile picture
