@@ -65,7 +65,7 @@ session_start();
                 mysqli_query($conn, $queryReg);
 
                 if(mysqli_errno($conn) == 1062){
-                    echo"Username already taken";
+                    // echo"Username already taken";
                     //here if possible make modul pop up again
                 }else if(mysqli_error($conn)){
                     echo mysqli_error($conn);
@@ -80,7 +80,7 @@ session_start();
         }
     }
     
-    if(isset($_SESSION['username']) && isset($_SESSION['password'])){
+    if(isset($_SESSION['username'])){
     ?>
     
 
@@ -92,6 +92,18 @@ session_start();
                     <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                     <ul class="right hide-on-med-and-down">
                         <li><a href="profile.php">Profile</a></li>
+                        <?php
+                        if(isset($_SESSION['added'])){
+                            $numAdded = $_SESSION['added'];
+                            ?>
+                        <li><a href="cart.php">Shopping Cart<span class="badge"><?php echo $numAdded; ?></span></a></li>
+                            <?php
+                        }else{
+                            ?>
+                        <li><a href="cart.php">Shopping Cart</a></li>
+                            <?php
+                        }
+                        ?>
                         <li><a href="logout.php">Logout</a></li>
                     </ul>
                 </div>
@@ -123,20 +135,17 @@ session_start();
     <ul class="sidenav" id="mobile-demo">
     </ul>
     
-    <h1>Book Finder</h1>
-    <input type="text" id="search" placeholder="Title or Author">
-    <button id="button" type="button">Click Me</button>
+    <div class="container"">
+        <h1>Book Finder</h1>
+        <form action="#">
+            <input type="text" id="search" placeholder="Title or Author">
+            <button id="button" type="button">Click Me</button>
+        </form>
+        <div id="results">
 
-    <div class="container" id="results">
-
-    </div>
-
-    <div class="modal" id="modalBooks">
-        <div class="modal-content">
-            <h3>Hello i am a test!</h3>
         </div>
-    </div>
 
+    </div>
 
 
     <div class="modal" id="modalLogin">
@@ -193,6 +202,7 @@ session_start();
             </ul>
         </div>
     </div>
+
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
