@@ -1,6 +1,6 @@
 let count = 0;
 
-$(document).ready(function(){
+$(function(){
     //#region initialisations for Materialize components
     $('.sidenav').sidenav();
     $('.collapsible').collapsible();
@@ -14,16 +14,41 @@ $(document).ready(function(){
     $('.container').on('click', '.bookCard', function(){
         let res = $(this).prop('id')
         console.log(res)
-        SearchBook(res)
+        SearchToAddToCart(res)
     })
 
-    $('.cart').click(function(){
-        
-    })    
+    ShowInfoInCart()
 
 })
 
-function SearchBook(bookId){
+function ShowInfoInCart(){
+    $('img.cardImage').each(function(i, obj){
+        let bookId = $(this).attr('id');
+        $.ajax({
+            url: `https://www.googleapis.com/books/v1/volumes?q=id:${bookId}`,
+            dataType: 'json',
+            error: function(){
+                console.log("error")
+            },
+            success: function(data){
+                let volumeInfo = data.items[0].volumeInfo
+
+                let imgCard = "./images/image-not-available.jpg"
+                if(volumeInfo.imageLinks){
+                    imgCard = volumeInfo.imageLinks.thumbnail
+                }
+
+                let title = volumeInfo.title
+                console.log(title)
+
+                $(`#${bookId}`).attr('src', imgCard);
+                $(`h3#${bookId}`).html(title)
+            }
+        })
+    })
+}
+
+function SearchToAddToCart(bookId){
     $('#results').empty();
 
     $.ajax({
@@ -54,10 +79,6 @@ function SearchBook(bookId){
                     isbn[v.type] = v.identifier
                 })
             }
-            let idens = ""
-            Object.keys(isbn).forEach(function(key){
-                idens+= `<p>${key}: ${isbn[key]}</p>`
-            })
 
             let img
             if(volumeInfo.imageLinks){
@@ -68,12 +89,16 @@ function SearchBook(bookId){
 
             let categories = volumeInfo.categories
 
+            let price = Math.floor(Math.random()*(30 - 9 + 1)) + 9 //random price beweteen 9 and 30 euros
+
             $("#results").html(`
             <h1>${title}</h1>
             <h3>${authors.join(", ")}</h3>
             <img src=${img}>
+            <p>Price: ${price}</p>
             <form action="addToCart.php" method="post">
                 <input type="hidden" name="bookId" value="${bookId}">
+                <input type="hidden" name="bookPrice" value="${price}">
                 <input type="submit" name="subCart">
             </form>
             `)

@@ -17,30 +17,29 @@ session_start();
 </head>
 <body>
     <?php
-    if(isset($_SESSION['username']) && isset($_SESSION['password'])){
+        if(isset($_SESSION['username'])){
+            $username = $_SESSION['username'];
     ?>
-    
-
     <div class="navbar-fixed">
         <nav>
             <div class="container">
                 <div class="nav-wrapper">
-                    <a href="#!" class="brand-logo">Logo</a>
+                    <a href="index.php" class="brand-logo">Logo</a>
                     <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                     <ul class="right hide-on-med-and-down">
                         <li><a href="profile.php">Profile</a></li>
-                        <?php
-                            if(isset($_SESSION['added'])){
-                            $numAdded = $_SESSION['added'];
-                            ?>
+    <?php
+        if(isset($_SESSION['added'])){
+        $numAdded = $_SESSION['added'];
+    ?>
                         <li><a href="cart.php">Shopping Cart<span class="badge"><?php echo $numAdded; ?></span></a></li>
-                            <?php
-                        }else{
-                            ?>
+    <?php
+        }else{
+    ?>
                         <li><a href="cart.php">Shopping Cart</a></li>
-                            <?php
-                        }
-                        ?>
+    <?php
+        }
+    ?>
                         <li><a href="logout.php">Logout</a></li>
                     </ul>
                 </div>
@@ -48,10 +47,61 @@ session_start();
         </div>
     </div>
 
+    <div class="container">
     <?php
-    }else{
-        header("Location:index.php");
-    }
+    
+        require('connect.php');
+        $total = 0;
+
+        if($conn){
+            $queryGetUserId = "SELECT id FROM users WHERE username='$username'";
+            $resUser = mysqli_query($conn, $queryGetUserId) or die("Error looking in DB");
+            while ($row = $resUser->fetch_assoc()) {
+                $userToShow = $row['id'];
+            }
+
+            $queryGetCart = "SELECT * FROM cart WHERE user_id = '$userToShow'";
+            $resCart = mysqli_query($conn, $queryGetCart) or die ("no items in cart");
+
+            while($row = mysqli_fetch_array($resCart)){
+                $total += $row['price'];
+                echo '
+                
+            <div class="card medium horizontal" id="cartCard">
+                <div class="card-image">
+                    <img src="" class="cardImage" id=' . $row['book_id'] .'>
+                </div>
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <h3 id=' . $row['book_id'] . '></h3>
+                        <h4>Price: €' . $row['price'] . '.00</h4>
+
+                    </div>
+                    <div class="cart-action">
+                        <form action="removeFromCart.php" method="post">
+                            <input type="hidden" name="book_id[]" value=' . $row['book_id'] .'>
+                            <button class="waves-effect btn" name="btnCart">Remove</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+                ';
+            }
+
+
+        }
+    
+    ?>
+    <form action="checkoutItems.php" method="post">
+        <h3>Total Cost: €<?php echo $total ?>.00</h3>
+        <button class="waves-effect btn btn-large" name="btnCheckout">Checkout</button>
+    </form>
+    </div>
+
+    <?php
+        }else{
+            header("Location:index.php");
+        }
     ?>
 
 

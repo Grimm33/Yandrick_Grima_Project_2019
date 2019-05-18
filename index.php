@@ -34,10 +34,20 @@ session_start();
                 $res = mysqli_query($conn, $queryLogin) or die("Error looking in DB");
 
                 if(mysqli_num_rows($res) == 1){
-                    echo"You are logged in!";
-
                     $_SESSION['username'] = $username;
                     $_SESSION['password'] = $password;
+
+                    $queryGetUserId = "SELECT id FROM users WHERE username='$username'";
+                    $resUser = mysqli_query($conn, $queryGetUserId) or die("Error looking in DB");
+                    while ($row = $resUser->fetch_assoc()) {
+                        $userId = $row['id'];
+                    }
+
+                    $queryGetItemsInCart = "SELECT * FROM cart WHERE user_id = '$userId'";
+                    $resCartItems = mysqli_query($conn, $queryGetItemsInCart) or die ("Error");
+                    $rows = mysqli_num_rows($resCartItems);
+                    $_SESSION['added'] = $rows;
+
                 }else{
                     echo"incorrect username and password!";
                 }
@@ -70,9 +80,7 @@ session_start();
                 }else if(mysqli_error($conn)){
                     echo mysqli_error($conn);
                 }else if (mysqli_affected_rows($conn) == 1) {
-                    echo "User inserted!";
                     $_SESSION['username'] = $username;
-                    $_SESSION['password'] = $password;
                 }else {
                     echo "User not inserted!<br>";
                 }
@@ -81,6 +89,7 @@ session_start();
     }
     
     if(isset($_SESSION['username'])){
+        $numAdded = $_SESSION['added'];
     ?>
     
 
@@ -88,13 +97,13 @@ session_start();
         <nav>
             <div class="container">
                 <div class="nav-wrapper">
-                    <a href="#!" class="brand-logo">Logo</a>
+                    <a href="index.php" class="brand-logo">Logo</a>
                     <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                     <ul class="right hide-on-med-and-down">
                         <li><a href="profile.php">Profile</a></li>
                         <?php
                         if(isset($_SESSION['added'])){
-                            $numAdded = $_SESSION['added'];
+
                             ?>
                         <li><a href="cart.php">Shopping Cart<span class="badge"><?php echo $numAdded; ?></span></a></li>
                             <?php
