@@ -24,6 +24,9 @@ $(function(){
 function ShowInfoInCart(){
     $('img.cardImage').each(function(i, obj){
         let bookId = $(this).attr('id');
+
+        console.log(`id in img = ${bookId}`)
+
         $.ajax({
             url: `https://www.googleapis.com/books/v1/volumes?q=id:${bookId}`,
             dataType: 'json',
@@ -31,18 +34,22 @@ function ShowInfoInCart(){
                 console.log("error")
             },
             success: function(data){
-                let volumeInfo = data.items[0].volumeInfo
+                if(data.items){
+                    let volumeInfo = data.items[0].volumeInfo
 
-                let imgCard = "./images/image-not-available.jpg"
-                if(volumeInfo.imageLinks){
-                    imgCard = volumeInfo.imageLinks.thumbnail
-                }
-
-                let title = volumeInfo.title
-                console.log(title)
-
-                $(`#${bookId}`).attr('src', imgCard);
-                $(`h3#${bookId}`).html(title)
+                    let imgCard = "./images/image-not-available.jpg"
+                    if(volumeInfo.imageLinks){
+                        imgCard = volumeInfo.imageLinks.thumbnail
+                    }
+    
+                    let title = volumeInfo.title
+                    console.log(title)
+    
+                    $(`#${bookId}`).attr('src', imgCard);
+                    $(`h3#${bookId}`).html(title)
+                }else{
+                    console.log("Not found!")
+                }                
             }
         })
     })
@@ -86,8 +93,6 @@ function SearchToAddToCart(bookId){
             }else{
                 img = "./images/image-not-available.jpg"
             }
-
-            let categories = volumeInfo.categories
 
             let price = Math.floor(Math.random()*(30 - 9 + 1)) + 9 //random price beweteen 9 and 30 euros
 

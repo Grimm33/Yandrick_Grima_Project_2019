@@ -24,7 +24,7 @@ session_start();
         <nav>
             <div class="container">
                 <div class="nav-wrapper">
-                    <a href="index.php" class="brand-logo">Logo</a>
+                    <a href="index.php" class="brand-logo">Home</a>
                     <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                     <ul class="right hide-on-med-and-down">
                         <li><a href="profile.php">Profile</a></li>
