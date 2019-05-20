@@ -37,10 +37,15 @@ session_start();
                     $_SESSION['username'] = $username;
                     $_SESSION['password'] = $password;
 
-                    $queryGetUserId = "SELECT id FROM users WHERE username='$username'";
+                    $queryGetUserId = "SELECT * FROM users WHERE username='$username'";
                     $resUser = mysqli_query($conn, $queryGetUserId) or die("Error looking in DB");
                     while ($row = $resUser->fetch_assoc()) {
                         $userId = $row['id'];
+                        $isAdmin = $row['isAdmin'];
+                    }
+
+                    if($isAdmin == 1){
+                        $_SESSION['isAdmin'] = 1;
                     }
 
                     $queryGetItemsInCart = "SELECT * FROM cart WHERE user_id = '$userId'";
@@ -64,55 +69,103 @@ session_start();
         $email  =$_POST['email'];
         $usernameReg = $_POST['usernameReg'];
         $passwordReg = $_POST['passwordReg'];
+        $adminPass = $_POST['adminPass'];
 
         if(!empty($name) || !empty($surname) || !empty($email) || !empty($usernameReg) || !empty($passwordReg)){
             $passwordReg = hash('sha256', $passwordReg);
 
             require('connect.php');
             if($conn){
-                $queryReg = "INSERT INTO users (name, surname, email, username, password) VALUES('$name', '$surname', '$email', '$usernameReg', '$passwordReg')";
+                if(empty($adminPass)){
+                    $queryReg = "INSERT INTO users (name, surname, email, username, password) VALUES('$name', '$surname', '$email', '$usernameReg', '$passwordReg')";
+                    mysqli_query($conn, $queryReg);
 
-                mysqli_query($conn, $queryReg);
+                    if(mysqli_errno($conn) == 1062){
+                        // echo"Username already taken";
+                        //here if possible make modul pop up again
+                    }else if(mysqli_error($conn)){
+                        echo mysqli_error($conn);
+                    }else if (mysqli_affected_rows($conn) == 1) {
+                        $_SESSION['username'] = $usernameReg;
+                        $_SESSION['added'] = 0;
+                    }else {
+                        echo "User not inserted!<br>";
+                    }
+                }else if($adminPass == "admin"){
+                    echo "admin here";
+                    $int1 = 1;
+                    $queryReg = "INSERT INTO users (name, surname, email, username, password, isAdmin) VALUES('$name', '$surname', '$email', '$usernameReg', '$passwordReg', '$int1')";
+                    mysqli_query($conn, $queryReg) or die (mysqli_error($conn));
 
-                if(mysqli_errno($conn) == 1062){
-                    // echo"Username already taken";
-                    //here if possible make modul pop up again
-                }else if(mysqli_error($conn)){
-                    echo mysqli_error($conn);
-                }else if (mysqli_affected_rows($conn) == 1) {
-                    $_SESSION['username'] = $username;
-                }else {
-                    echo "User not inserted!<br>";
+                    if(mysqli_errno($conn) == 1062){
+                        echo"Username already taken";
+                        //here if possible make modul pop up again
+                    }else if(mysqli_error($conn)){
+                        echo mysqli_error($conn);
+                    }else if (mysqli_affected_rows($conn) == 1) {
+                        $_SESSION['username'] = $usernameReg;
+                        $_SESSION['added'] = 0;
+                        $_SESSION['isAdmin'] = 1;
+                    }else {
+                        echo "User not inserted!<br>";
+                    }
+                }else{
+                    echo "incorrect admin pass";
                 }
             }
         }
     }
     
     if(isset($_SESSION['username'])){
-        $numAdded = $_SESSION['added'];
+        if(isset($_SESSION['added'])){
+            $numAdded = $_SESSION['added'];
+        }else{
+            $_SESSION['added'] = 0;
+            $numAdded = $_SESSION['added'];
+        }
     ?>
-    
 
     <div class="navbar-fixed">
         <nav>
             <div class="container">
                 <div class="nav-wrapper">
                     <a href="index.php" class="brand-logo">Home</a>
-                    <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                     <ul class="right hide-on-med-and-down">
-                        <li><a href="profile.php">Profile</a></li>
                         <?php
-                        if(isset($_SESSION['added'])){
+                        if(isset($_SESSION['isAdmin'])){
+                            if($_SESSION['isAdmin'] == 1){
+                                ?>
+                                
+                        <li><a href="profile.php?isAdmin=1">Profile</a></li>
 
+                                <?php
+                            }
+                        }else{
+                            ?>
+
+                        <li><a href="profile.php?isAdmin=0">Profile</a></li>
+
+                        <?php
+                        }
+                        if(isset($_SESSION['added'])){
+                            if($_SESSION['added'] == 0){
+                                ?>
+                        <li><a href="cart.php">Shopping Cart</a></li>
+                                <?php
+                            }else{
                             ?>
                         <li><a href="cart.php">Shopping Cart<span class="badge"><?php echo $numAdded; ?></span></a></li>
                             <?php
+                            }
                         }else{
                             ?>
                         <li><a href="cart.php">Shopping Cart</a></li>
                             <?php
                         }
                         ?>
+
+
+                        
                         <li><a href="logout.php">Logout</a></li>
                     </ul>
                 </div>
@@ -129,7 +182,6 @@ session_start();
             <div class="container">
                 <div class="nav-wrapper">
                     <a href="#!" class="brand-logo">Home</a>
-                    <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                     <ul class="right hide-on-med-and-down">
                         <li><a class="modal-trigger" href="#modalLogin">Login/ Register</a></li>
                     </ul>
@@ -140,9 +192,6 @@ session_start();
     <?php
     }
     ?>
-
-    <ul class="sidenav" id="mobile-demo">
-    </ul>
     
     <div class="container"">
         <h1>Book Finder</h1>
@@ -155,6 +204,8 @@ session_start();
         </div>
 
     </div>
+
+
 
 
     <div class="modal" id="modalLogin">
@@ -202,6 +253,10 @@ session_start();
                             <div class="input-field">
                                 <input type="password" name="passwordReg" id="passwordReg">
                                 <label for="passwordReg">Password</label>
+                            </div>
+                            <div class="input-field">
+                                <input type="password" name="adminPass" id="adminPass">
+                                <label for="adminPass">Admin Passcode</label>
                             </div>
                             <button class="btn waves-effect" type="submit" name="sub_register">Register</button>
                         </form>

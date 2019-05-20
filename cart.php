@@ -13,7 +13,7 @@ session_start();
 
     <link rel="stylesheet" href="./style/Materialize/css/sass/materialize.css">
     <link rel="stylesheet" href="./style/main.css">
-    <title>Document</title>
+    <title>Cart</title>
 </head>
 <body>
     <?php
@@ -77,7 +77,7 @@ session_start();
                         <h4>Price: €' . $row['price'] . '.00</h4>
 
                     </div>
-                    <div class="cart-action">
+                    <div class="card-action">
                         <form action="removeFromCart.php" method="post">
                             <input type="hidden" name="book_id[]" value=' . $row['book_id'] .'>
                             <button class="waves-effect btn" name="btnCart">Remove</button>
