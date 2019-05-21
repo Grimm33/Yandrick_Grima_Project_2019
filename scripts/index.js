@@ -104,7 +104,7 @@ function SearchToAddToCart(bookId){
             <form action="addToCart.php" method="post">
                 <input type="hidden" name="bookId" value="${bookId}">
                 <input type="hidden" name="bookPrice" value="${price}">
-                <input type="submit" name="subCart">
+                <button class="waves-effect btn btn-large" name="subCart">Add To Cart</button>
             </form>
             `)
         }
@@ -171,7 +171,7 @@ function MainSearch(offset, maxResults){
                     if(count % cols == 0){
                         $('#results').append('<div class="row"></div>')
                     }
-                    $('#results .row:last').append(`<div class="col s6 m3 bookCard" href="#modalBooks" id="${data.items[i].id}">
+                    $('#results .row:last').append(`<div class="col s6 m3 bookCard" id="${data.items[i].id}">
                         <div class="card">
                             <div class="card-image">
                                 <img src="${img}">

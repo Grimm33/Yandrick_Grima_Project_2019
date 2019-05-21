@@ -10,9 +10,7 @@ This is a website which lets uers shop for books
 * search books using google books api
 * add books to cart and view all books in cart
 * checkout items from cart and 'buy' them
-
-### To be added:
-* let users see their bought books and total amount of money spend
-* let users see their information in the profile page
+* let users see their purchased books
 * let users change their profile picture
 * let users edit their information like username, password, email etc.
+* logging of user activity (login and logout)

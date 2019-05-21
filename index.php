@@ -35,7 +35,6 @@ session_start();
 
                 if(mysqli_num_rows($res) == 1){
                     $_SESSION['username'] = $username;
-                    $_SESSION['password'] = $password;
 
                     $queryGetUserId = "SELECT * FROM users WHERE username='$username'";
                     $resUser = mysqli_query($conn, $queryGetUserId) or die("Error looking in DB");
@@ -52,6 +51,10 @@ session_start();
                     $resCartItems = mysqli_query($conn, $queryGetItemsInCart) or die ("Error");
                     $rows = mysqli_num_rows($resCartItems);
                     $_SESSION['added'] = $rows;
+
+                    $loginString = "user logged in";
+                    $queryLogLogin = "INSERT INTO log (user_id, log_message, log_time) VALUES('$userId', '$loginString',  CURRENT_TIMESTAMP())";
+                    $resLog = mysqli_query($conn, $queryLogLogin) or die ("Error logging login");
 
                 }else{
                     echo"incorrect username and password!";
