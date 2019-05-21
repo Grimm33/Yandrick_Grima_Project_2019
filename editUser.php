@@ -46,7 +46,12 @@ if(isset($_SESSION['username'])){
                 $newSurname = $_POST['last_name'];
                 $newEmail = $_POST['email'];
                 $newUsername = $_POST['username'];
-                $newPassword = hash('sha256', $_POST['password']);
+
+                if($_POST['password'] != ""){
+                    $newPassword = hash('sha256', $_POST['password']);
+                }else{
+                    $newPassword = "";
+                }
 
                 if($row['name'] != $newName){
                     $updateName = "UPDATE users SET name='$newName' WHERE id='$userId'";
@@ -69,11 +74,28 @@ if(isset($_SESSION['username'])){
                     $_SESSION['username'] = $newUsername;
                 }
 
-                if($row['password'] != $newPassword){
+                if($newPassword != ""){
                     $updatePassword = "UPDATE users SET password='$newPassword' WHERE id='$userId'";
                     mysqli_query($conn, $updatePassword) or die("error changing password");
                 }
 
+                if(isset($_FILES['image_file']) && $_FILES['image_file']['size'] > 0){
+                    print_r($_FILES);
+                    echo "<hr>";
+                    $file_path = "uploads/" . $_FILES['image_file']['name'];
+
+                    $uploaded = move_uploaded_file($_FILES['image_file']['tmp_name'], $file_path);
+
+                    print_r($uploaded);
+                    echo "<hr>";
+
+                    if($uploaded){
+                        $updateImage = "INSERT INTO images (user_id, image) VALUES('$userId', '$file_path')";
+                        mysqli_query($conn, $updateImage) or die("Error uploading image");
+                    }else{
+                        echo " Something bad happened: " . $_FILES['image_file']['error'];
+                    }
+                }
                 
             }
 
@@ -101,20 +123,21 @@ if(isset($_SESSION['username'])){
                     <label for="username"><?php echo $row['username']; ?></label>
                 </div>
                 <div class="input-field">
-                    <input  id="password" type="password" name="password" value="<?php echo $row['password']; ?>">
+                    <input  id="password" type="password" name="password">
                     <label for="password">new password</label>
                 </div>
                 <div class="input-field">
                     <div class="row">
                         <div class="col s12 m6">
                             <h4>User Picture:</h4>
-                            <img src="<?php if($userImage == ""){echo "./images/image-not-available.jpg";}else{echo $userImage;}; ?>" alt="userImage">
+                            <img src="<?php if($userImage == ""){echo "./images/image-not-available.jpg";}else{echo $userImage;}; ?>" alt="userImage" class="userImage">
                         </div>
+
                         <div class="col s12 m6">
                             <div class="file-field input-field">
                                 <div class="btn">
                                     <span>File</span>
-                                    <input type="file" name="image" id="image">
+                                    <input type="file" name="image_file" id="image">
                                 </div>
                                 <div class="file-path wrapper">
                                     <input type="text" class="file-path">

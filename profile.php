@@ -56,11 +56,24 @@ if(isset($_SESSION['username'])){
         if($_SESSION['isAdmin'] == 1){
             ?>
         <br>
-        <form action="profile.php" method="post">
-            <button class="waves-effect btn btn-large" name="btn_admin_view_users">View Users</button>
-            
-            <button class="waves-effect btn btn-large" name="btn_admin_view_books">View your books</button>
-        </form>
+        <div class="row">
+            <div class="col s12 m3">
+                <form action="editUser.php" method="post">
+                    <button class="waves-effect btn btn-large" name="btn_edit_user">Edit Information</button>
+                </form>
+            </div>
+            <div class="col s12 m9">
+                <form action="profile.php" method="post">
+                        <div class="col s12 m6">
+                            <button class="waves-effect btn btn-large" name="btn_admin_view_users">View Users</button>
+                        </div>
+                        <div class="col s12 m6">
+                            <button class="waves-effect btn btn-large" name="btn_admin_view_books">View your books</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
             <?php
         }
     }else{
@@ -109,36 +122,22 @@ if(isset($_SESSION['username'])){
 
             while($row = mysqli_fetch_array($resGetUsers)){
                 if($row['isAdmin'] == 1){
-                    
-                    // $queryGetUserId = "SELECT id FROM users WHERE username='$row['username']'";
-                    // $resUser = mysqli_query($conn, $queryGetUserId) or die("Error looking in DB");
-                    // while ($row = $resUser->fetch_assoc()) {
-                    //     $userId = $row['id'];
-                    // }
-                    $userID = $row['id'];
-                    $queryGetImage = "SELECT image FROM images WHERE user_id = '$userID'";
-                    $resImage = mysqli_query($conn, $queryGetImage);
-                    $rowImage = mysqli_fetch_array($resImage);
-                    echo '
-                    <div class="card medium horizontal" id="cardUsers">
-                        <div class="card-image">
-                            <img src="' . $rowImage['image'] . '" class="cardUserImage" id=' . $row['id'] .'>
-                        </div>
-                        <div class="card-stacked">
-                            <div class="card-content">
-                                <h3>Username: ' . $row['username'] . '<h3>
-                                <h3>Email: ' . $row['email'] . ' </h3>
-                                <h4>Admin Priveleges on</h4>
-                            </div>
-                        </div>
-                    </div>';
-
+                    $adminPriv = "on";
                 }else{
-                    $userID = $row['id'];
-                    $queryGetImage = "SELECT image FROM images WHERE user_id = '$userID'";
-                    $resImage = mysqli_query($conn, $queryGetImage);
-                    $rowImage = mysqli_fetch_array($resImage);
-                    echo '
+                    $adminPriv = "off";
+                }
+                    
+                // $queryGetUserId = "SELECT id FROM users WHERE username='$row['username']'";
+                // $resUser = mysqli_query($conn, $queryGetUserId) or die("Error looking in DB");
+                // while ($row = $resUser->fetch_assoc()) {
+                //     $userId = $row['id'];
+                // }
+                $userID = $row['id'];
+                $queryGetImage = "SELECT image FROM images WHERE user_id = '$userID'";
+                $resImage = mysqli_query($conn, $queryGetImage);
+                $rowImage = mysqli_fetch_array($resImage);
+                echo '
+                <div class="container">
                     <div class="card medium horizontal" id="cardUsers">
                         <div class="card-image">
                             <img src="' . $rowImage['image'] . '" class="cardUserImage" id=' . $row['id'] .'>
@@ -147,12 +146,11 @@ if(isset($_SESSION['username'])){
                             <div class="card-content">
                                 <h3>Username: ' . $row['username'] . '<h3>
                                 <h3>Email: ' . $row['email'] . ' </h3>
-                                <h4>Admin Priveleges off</h4>
+                                <h4>Admin Priveleges ' . $adminPriv . '</h4>
                             </div>
                         </div>
-                    </div>';
-
-                }
+                    </div>
+                </div>';
             }
         }
 
