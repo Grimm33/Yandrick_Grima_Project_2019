@@ -1,12 +1,6 @@
 let count = 0;
 
 $(function(){
-    //#region initialisations for Materialize components
-    $('.sidenav').sidenav();
-    $('.collapsible').collapsible();
-    $('.modal').modal();
-    //#endregion
-
     $('#button').click(function(){
         MainSearch(0, 40)
     });

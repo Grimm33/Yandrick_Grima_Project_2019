@@ -192,6 +192,7 @@ if(isset($_SESSION['username'])){
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="./scripts/materialize-js/bin/materialize.min.js"></script>
+    <script type="module" src="./scripts/init.js"></script>
     <script type="module" src="./scripts/index.js"></script>
 </body>
 </html>
