@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 21, 2019 at 03:49 PM
+-- Generation Time: Jul 01, 2019 at 07:35 PM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.3.1
 
@@ -33,13 +33,6 @@ CREATE TABLE `cart` (
   `user_id` int(11) NOT NULL,
   `price` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `cart`
---
-
-INSERT INTO `cart` (`book_id`, `user_id`, `price`) VALUES
-('Jc9MaZrG3j8C', 8, 26);
 
 -- --------------------------------------------------------
 
@@ -88,7 +81,22 @@ INSERT INTO `log` (`user_id`, `log_message`, `log_time`) VALUES
 (8, 'user logged in', '2019-05-21 13:10:13.00'),
 (8, 'user logged in', '2019-05-21 13:16:35.00'),
 (8, 'user logged in', '2019-05-21 13:17:51.00'),
-(8, 'user logged out', '2019-05-21 13:43:37.00');
+(8, 'user logged out', '2019-05-21 13:43:37.00'),
+(1, 'user logged out', '2019-05-29 15:58:58.00'),
+(8, 'user logged in', '2019-06-28 20:46:25.00'),
+(8, 'user logged out', '2019-06-28 20:56:09.00'),
+(1, 'user logged in', '2019-06-28 20:56:18.00'),
+(1, 'user logged out', '2019-06-28 23:06:09.00'),
+(1, 'user logged in', '2019-06-29 00:20:32.00'),
+(1, 'user logged out', '2019-06-29 00:28:27.00'),
+(8, 'user logged in', '2019-06-29 00:28:31.00'),
+(8, 'user logged out', '2019-06-29 22:35:48.00'),
+(8, 'user logged in', '2019-07-01 14:40:33.00'),
+(8, 'user logged out', '2019-07-01 14:41:09.00'),
+(1, 'user logged in', '2019-07-01 15:25:25.00'),
+(1, 'user logged out', '2019-07-01 15:28:17.00'),
+(13, 'user logged out', '2019-07-01 15:29:10.00'),
+(1, 'user logged in', '2019-07-01 15:29:15.00');
 
 -- --------------------------------------------------------
 
@@ -109,7 +117,9 @@ CREATE TABLE `userbooks` (
 INSERT INTO `userbooks` (`user_id`, `book_id`, `price`) VALUES
 (8, 'ukNtSB5CIf0C', 19),
 (9, 'SqMNAQAAMAAJ', 27),
-(8, 'SqMNAQAAMAAJ', 13);
+(8, 'SqMNAQAAMAAJ', 13),
+(8, 'SqMNAQAAMAAJ', 12),
+(13, 'NTKe4tS2dhgC', 10);
 
 -- --------------------------------------------------------
 
@@ -132,10 +142,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `surname`, `email`, `username`, `password`, `isAdmin`) VALUES
-(1, 'yandrick', 'grima', 'yand@gmail.com', 'grimm123', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 1),
-(8, 'wendigo', 'sant', 'boithisworks@gmail.com', 'grimm', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 0),
+(1, 'Alfred', 'grima', 'yand@gmail.com', 'grimm123', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 1),
+(8, 'Yandrick', 'sant', 'boithisworks@gmail.com', 'grimm', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 0),
 (9, 'Yandrick', 'Grima', 'yandrick.alpha.grima@gmail.com', 'admin', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 1),
-(10, 'This is a test account', 'image not available', 'image@not.com', 'TestAccount', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 0);
+(10, 'This is a test account', 'image not available', 'image@not.com', 'TestAccount', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 0),
+(13, 'yandrick', 'grima', 'vcx@gfd', 'indigo', 'a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3', 0);
 
 --
 -- Indexes for dumped tables
@@ -145,7 +156,7 @@ INSERT INTO `users` (`id`, `name`, `surname`, `email`, `username`, `password`, `
 -- Indexes for table `cart`
 --
 ALTER TABLE `cart`
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `cart_ibfk_1` (`user_id`);
 
 --
 -- Indexes for table `images`
@@ -157,13 +168,13 @@ ALTER TABLE `images`
 -- Indexes for table `log`
 --
 ALTER TABLE `log`
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `log_ibfk_1` (`user_id`);
 
 --
 -- Indexes for table `userbooks`
 --
 ALTER TABLE `userbooks`
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `userbooks_ibfk_1` (`user_id`);
 
 --
 -- Indexes for table `users`
@@ -181,7 +192,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Constraints for dumped tables
@@ -191,25 +202,25 @@ ALTER TABLE `users`
 -- Constraints for table `cart`
 --
 ALTER TABLE `cart`
-  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `images`
 --
 ALTER TABLE `images`
-  ADD CONSTRAINT `images_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `images_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `log`
 --
 ALTER TABLE `log`
-  ADD CONSTRAINT `log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `log_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `userbooks`
 --
 ALTER TABLE `userbooks`
-  ADD CONSTRAINT `userbooks_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `userbooks_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
